@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink, ArrowUp, ArrowDown, Info } from 'lucide-react';
@@ -69,7 +68,12 @@ const CryptoDetail = () => {
     );
   };
   
-  const formatLargeNumber = (num: number) => {
+  const formatLargeNumber = (num: number | null | undefined) => {
+    // Add null/undefined check
+    if (num === null || num === undefined) {
+      return 'N/A';
+    }
+    
     if (num >= 1e12) {
       return (num / 1e12).toFixed(2) + ' T';
     }
