@@ -132,7 +132,8 @@ const Portfolio = () => {
             };
           });
           
-          setAssets(updatedAssets);
+          // Make sure we properly type the assets
+          setAssets(updatedAssets as Asset[]);
           
           // Calculate totals
           const totalValue = updatedAssets.reduce((sum, asset) => sum + asset.value, 0);
