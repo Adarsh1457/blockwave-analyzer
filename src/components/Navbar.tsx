@@ -1,8 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, ChevronRight, Moon, Sun } from 'lucide-react';
+import { Menu, X, ChevronRight, Moon, Sun, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,6 +19,7 @@ const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -49,7 +59,17 @@ const Navbar = () => {
   };
   
   const handleGetStarted = () => {
-    navigate('/dashboard');
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    } else {
+      navigate('/login');
+    }
+    closeMenu();
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
     closeMenu();
   };
   
@@ -111,10 +131,53 @@ const Navbar = () => {
               )}
             </Button>
             
-            <Button onClick={handleGetStarted} className="hidden md:flex">
-              <span>Get Started</span>
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="rounded-full p-0" size="icon">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage
+                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || '')}&background=random`}
+                        alt={user?.name || 'User'}
+                      />
+                      <AvatarFallback>
+                        <User className="h-4 w-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      {user?.name && <p className="font-medium">{user.name}</p>}
+                      {user?.email && <p className="w-[200px] truncate text-sm text-muted-foreground">{user.email}</p>}
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/portfolio" className="cursor-pointer">
+                      Portfolio
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive" onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button onClick={handleGetStarted} className="hidden md:flex">
+                <span>Get Started</span>
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            )}
             
             {/* Mobile menu button */}
             <Button
@@ -153,10 +216,41 @@ const Navbar = () => {
                   {item.title}
                 </Link>
               ))}
-              <Button onClick={handleGetStarted} className="mt-4">
-                <span>Get Started</span>
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
+              
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/profile"
+                    onClick={closeMenu}
+                    className="px-4 py-3 rounded-lg text-lg transition-colors hover:bg-secondary flex items-center"
+                  >
+                    <User className="mr-2 h-5 w-5" />
+                    Profile
+                  </Link>
+                  <Button 
+                    variant="destructive" 
+                    onClick={handleLogout} 
+                    className="mt-4 w-full justify-start"
+                  >
+                    <LogOut className="mr-2 h-5 w-5" />
+                    Log out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={closeMenu}
+                    className="px-4 py-3 rounded-lg text-lg transition-colors hover:bg-secondary"
+                  >
+                    Log in
+                  </Link>
+                  <Button onClick={handleGetStarted} className="mt-4 w-full justify-between">
+                    <span>Get Started</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
