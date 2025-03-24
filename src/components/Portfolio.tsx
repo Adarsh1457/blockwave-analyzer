@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 import { 
@@ -111,24 +112,24 @@ const Portfolio = () => {
           );
           
           const updatedAssets = assets.map(asset => {
-            const currentPrice = priceMap.get(asset.id) || asset.currentPrice;
-            const value = asset.quantity * currentPrice;
-            const profit = value - (asset.quantity * asset.purchasePrice);
-            const profitPercentage = ((currentPrice - asset.purchasePrice) / asset.purchasePrice) * 100;
+            const currentPrice = Number(priceMap.get(asset.id) || asset.currentPrice);
+            const value = Number(asset.quantity) * currentPrice;
+            const profit = value - (Number(asset.quantity) * Number(asset.purchasePrice));
+            const profitPercentage = ((currentPrice - Number(asset.purchasePrice)) / Number(asset.purchasePrice)) * 100;
             
             return {
               ...asset,
-              currentPrice: Number(currentPrice),
-              value: Number(value),
-              profit: Number(profit),
-              profitPercentage: Number(profitPercentage)
+              currentPrice,
+              value,
+              profit,
+              profitPercentage
             };
           });
           
           setAssets(updatedAssets);
           
-          const totalValue = updatedAssets.reduce((sum, asset) => sum + Number(asset.value), 0);
-          const totalProfit = updatedAssets.reduce((sum, asset) => sum + Number(asset.profit), 0);
+          const totalValue = updatedAssets.reduce((sum, asset) => sum + asset.value, 0);
+          const totalProfit = updatedAssets.reduce((sum, asset) => sum + asset.profit, 0);
           
           setTotalValue(totalValue);
           setTotalProfit(totalProfit);
