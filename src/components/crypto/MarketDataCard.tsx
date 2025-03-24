@@ -46,14 +46,14 @@ const MarketDataCard = ({ isLoading, coinDetails }: MarketDataCardProps) => {
           <div className="flex justify-between items-center py-2 border-b">
             <span className="text-muted-foreground">Market Cap</span>
             <span className="font-medium">
-              {formatCurrency(coinDetails.market_cap)}
+              {formatCurrency(coinDetails.market_data?.market_cap?.usd)}
             </span>
           </div>
           
           <div className="flex justify-between items-center py-2 border-b">
             <span className="text-muted-foreground">24h Trading Vol</span>
             <span className="font-medium">
-              {formatCurrency(coinDetails.total_volume)}
+              {formatCurrency(coinDetails.market_data?.total_volume?.usd)}
             </span>
           </div>
           
@@ -76,24 +76,24 @@ const MarketDataCard = ({ isLoading, coinDetails }: MarketDataCardProps) => {
               </HoverCard>
             </div>
             <span className="font-medium">
-              {formatLargeNumber(coinDetails.circulating_supply)} {coinDetails.symbol.toUpperCase()}
+              {formatLargeNumber(coinDetails.market_data?.circulating_supply)} {coinDetails.symbol?.toUpperCase()}
             </span>
           </div>
           
-          {coinDetails.total_supply && (
+          {coinDetails.market_data?.total_supply && (
             <div className="flex justify-between items-center py-2 border-b">
               <span className="text-muted-foreground">Total Supply</span>
               <span className="font-medium">
-                {formatLargeNumber(coinDetails.total_supply)} {coinDetails.symbol.toUpperCase()}
+                {formatLargeNumber(coinDetails.market_data?.total_supply)} {coinDetails.symbol?.toUpperCase()}
               </span>
             </div>
           )}
           
-          {coinDetails.max_supply && (
+          {coinDetails.market_data?.max_supply && (
             <div className="flex justify-between items-center py-2 border-b">
               <span className="text-muted-foreground">Max Supply</span>
               <span className="font-medium">
-                {formatLargeNumber(coinDetails.max_supply)} {coinDetails.symbol.toUpperCase()}
+                {formatLargeNumber(coinDetails.market_data?.max_supply)} {coinDetails.symbol?.toUpperCase()}
               </span>
             </div>
           )}
@@ -105,28 +105,28 @@ const MarketDataCard = ({ isLoading, coinDetails }: MarketDataCardProps) => {
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">24h</span>
                 <div className="flex items-center">
-                  <PriceChangeIndicator value={coinDetails.market_data.price_change_percentage_24h} />
+                  <PriceChangeIndicator value={coinDetails.market_data?.price_change_percentage_24h} />
                 </div>
               </div>
               
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">7d</span>
                 <div className="flex items-center">
-                  <PriceChangeIndicator value={coinDetails.market_data.price_change_percentage_7d} />
+                  <PriceChangeIndicator value={coinDetails.market_data?.price_change_percentage_7d} />
                 </div>
               </div>
               
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">30d</span>
                 <div className="flex items-center">
-                  <PriceChangeIndicator value={coinDetails.market_data.price_change_percentage_30d} />
+                  <PriceChangeIndicator value={coinDetails.market_data?.price_change_percentage_30d} />
                 </div>
               </div>
               
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">1y</span>
                 <div className="flex items-center">
-                  <PriceChangeIndicator value={coinDetails.market_data.price_change_percentage_1y} />
+                  <PriceChangeIndicator value={coinDetails.market_data?.price_change_percentage_1y} />
                 </div>
               </div>
             </div>

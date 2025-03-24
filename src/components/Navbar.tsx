@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, ChevronRight, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -9,6 +9,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -45,6 +46,11 @@ const Navbar = () => {
 
   const closeMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+  
+  const handleGetStarted = () => {
+    navigate('/dashboard');
+    closeMenu();
   };
   
   const navItems = [
@@ -105,11 +111,9 @@ const Navbar = () => {
               )}
             </Button>
             
-            <Button asChild className="hidden md:flex">
-              <Link to="/dashboard">
-                <span>Get Started</span>
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </Link>
+            <Button onClick={handleGetStarted} className="hidden md:flex">
+              <span>Get Started</span>
+              <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
             
             {/* Mobile menu button */}
@@ -149,11 +153,9 @@ const Navbar = () => {
                   {item.title}
                 </Link>
               ))}
-              <Button asChild className="mt-4">
-                <Link to="/dashboard" onClick={closeMenu}>
-                  <span>Get Started</span>
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Link>
+              <Button onClick={handleGetStarted} className="mt-4">
+                <span>Get Started</span>
+                <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>

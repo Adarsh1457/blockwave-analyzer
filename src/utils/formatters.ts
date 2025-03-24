@@ -6,7 +6,12 @@
 /**
  * Format a number as currency (USD)
  */
-export const formatCurrency = (value: number) => {
+export const formatCurrency = (value: number | null | undefined) => {
+  // Add null/undefined check
+  if (value === null || value === undefined) {
+    return 'N/A';
+  }
+  
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

@@ -4,10 +4,19 @@ import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface PriceChangeIndicatorProps {
-  value: number;
+  value: number | null | undefined;
 }
 
 const PriceChangeIndicator = ({ value }: PriceChangeIndicatorProps) => {
+  // Add null/undefined check
+  if (value === null || value === undefined) {
+    return (
+      <Badge variant="outline" className="ml-2">
+        N/A
+      </Badge>
+    );
+  }
+
   return (
     <Badge
       variant={value >= 0 ? 'default' : 'destructive'}
