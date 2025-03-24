@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useGetTopCoins, useGetGlobalData } from '@/services/api';
@@ -6,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import CryptoCard from '@/components/CryptoCard';
 import CryptoTable from '@/components/CryptoTable';
 import PriceChart from '@/components/PriceChart';
+import FavoriteCryptos from '@/components/crypto/FavoriteCryptos';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,13 +23,16 @@ const Dashboard = () => {
   const { data: globalData, isLoading: isLoadingGlobal } = useGetGlobalData();
   const [selectedCoin, setSelectedCoin] = useState<string | null>(null);
   const [featuredCoins, setFeaturedCoins] = useState<any[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
+    const savedFavorites = localStorage.getItem('cryptoFavorites');
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
+    }
+
     if (coins && coins.length > 0) {
-      // Set the first coin as selected by default
       setSelectedCoin(coins[0]?.id || null);
-      
-      // Get top 4 coins for the featured section
       setFeaturedCoins(coins.slice(0, 4));
     }
   }, [coins]);
@@ -200,6 +203,13 @@ const Dashboard = () => {
             )}
           </div>
         </div>
+        
+        {/* Favorites Section */}
+        {!isLoadingCoins && (
+          <div className="mb-8">
+            <FavoriteCryptos favorites={favorites} cryptocurrencies={coins || []} />
+          </div>
+        )}
         
         {/* Featured Cryptocurrencies */}
         <div className="mb-8">

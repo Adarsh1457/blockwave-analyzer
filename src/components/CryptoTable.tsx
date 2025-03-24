@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -144,13 +143,9 @@ const CryptoTable = () => {
   };
   
   const toggleFavorite = (id: string) => {
-    let newFavorites: string[];
-    
-    if (favorites.includes(id)) {
-      newFavorites = favorites.filter(favId => favId !== id);
-    } else {
-      newFavorites = [...favorites, id];
-    }
+    const newFavorites = favorites.includes(id) 
+      ? favorites.filter(favId => favId !== id)
+      : [...favorites, id];
     
     setFavorites(newFavorites);
     localStorage.setItem('cryptoFavorites', JSON.stringify(newFavorites));
