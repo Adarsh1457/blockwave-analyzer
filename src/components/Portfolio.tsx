@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 import { 
@@ -64,7 +63,6 @@ const Portfolio = () => {
   const [totalProfit, setTotalProfit] = useState(0);
   const { toast } = useToast();
   
-  // Fetch cryptocurrencies for the dropdown
   useEffect(() => {
     const fetchCryptocurrencies = async () => {
       try {
@@ -82,7 +80,6 @@ const Portfolio = () => {
     
     fetchCryptocurrencies();
     
-    // Load portfolio from local storage
     const savedPortfolio = localStorage.getItem('cryptoPortfolio');
     if (savedPortfolio) {
       setAssets(JSON.parse(savedPortfolio));
@@ -91,7 +88,6 @@ const Portfolio = () => {
     setLoading(false);
   }, []);
   
-  // Update current prices and calculate portfolio metrics
   useEffect(() => {
     const updatePrices = async () => {
       if (assets.length === 0) {
@@ -101,7 +97,6 @@ const Portfolio = () => {
       }
       
       try {
-        // Get all the crypto IDs
         const coinIds = assets.map(asset => asset.id).join(',');
         
         const response = await fetch(
@@ -111,12 +106,10 @@ const Portfolio = () => {
         if (response.ok) {
           const data = await response.json();
           
-          // Create a map for faster lookups
           const priceMap = new Map(
             data.map((coin: CryptoCurrency) => [coin.id, coin.current_price])
           );
           
-          // Update assets with current prices
           const updatedAssets = assets.map(asset => {
             const currentPrice = priceMap.get(asset.id) || asset.currentPrice;
             const value = asset.quantity * currentPrice;
@@ -125,24 +118,21 @@ const Portfolio = () => {
             
             return {
               ...asset,
-              currentPrice,
-              value,
-              profit,
-              profitPercentage
+              currentPrice: Number(currentPrice),
+              value: Number(value),
+              profit: Number(profit),
+              profitPercentage: Number(profitPercentage)
             };
           });
           
-          // Make sure we properly type the assets
-          setAssets(updatedAssets as Asset[]);
+          setAssets(updatedAssets);
           
-          // Calculate totals
-          const totalValue = updatedAssets.reduce((sum, asset) => sum + asset.value, 0);
-          const totalProfit = updatedAssets.reduce((sum, asset) => sum + asset.profit, 0);
+          const totalValue = updatedAssets.reduce((sum, asset) => sum + Number(asset.value), 0);
+          const totalProfit = updatedAssets.reduce((sum, asset) => sum + Number(asset.profit), 0);
           
           setTotalValue(totalValue);
           setTotalProfit(totalProfit);
           
-          // Save to local storage
           localStorage.setItem('cryptoPortfolio', JSON.stringify(updatedAssets));
         }
       } catch (error) {
@@ -152,7 +142,6 @@ const Portfolio = () => {
     
     updatePrices();
     
-    // Set up interval to update prices every minute
     const intervalId = setInterval(updatePrices, 60000);
     
     return () => clearInterval(intervalId);
@@ -191,15 +180,12 @@ const Portfolio = () => {
       return;
     }
     
-    // Check if asset already exists in portfolio
     const existingAssetIndex = assets.findIndex(asset => asset.id === selectedCryptoId);
     
     if (existingAssetIndex !== -1) {
-      // Update existing asset
       const updatedAssets = [...assets];
       const existingAsset = updatedAssets[existingAssetIndex];
       
-      // Calculate new average purchase price
       const totalQuantity = existingAsset.quantity + quantityNum;
       const totalCost = (existingAsset.quantity * existingAsset.purchasePrice) + (quantityNum * purchasePriceNum);
       const newAveragePurchasePrice = totalCost / totalQuantity;
@@ -221,7 +207,6 @@ const Portfolio = () => {
         description: `Added ${quantityNum} ${selectedCrypto.symbol.toUpperCase()} to your portfolio.`,
       });
     } else {
-      // Add new asset
       const value = quantityNum * selectedCrypto.current_price;
       const profit = value - (quantityNum * purchasePriceNum);
       const profitPercentage = ((selectedCrypto.current_price - purchasePriceNum) / purchasePriceNum) * 100;
@@ -249,7 +234,6 @@ const Portfolio = () => {
       });
     }
     
-    // Reset form
     setSelectedCryptoId('');
     setQuantity('');
     setPurchasePrice('');
